@@ -1,0 +1,33 @@
+.description{
+    margin: 120px 170px;
+
+}
+.nav{
+    display: flex;
+
+}
+.navbox{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16 px;
+    font-weight: 600;
+    width: 171px;
+    height: 70px;
+    border: 1px solid #d0d0d0;
+}
+.navbox-fade{
+    margin-left: 10px;
+    background: #fbfbfb;
+    display: flex;
+    align-items: center;
+    color: #555;
+}
+.des{
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    border: 1px solid #d0d0d0;
+    padding: 49px;
+    padding-bottom: 70px;
+}

@@ -1,0 +1,20 @@
+.side{
+    display: flex;
+    padding-top: 30px;
+    flex-direction: column;
+    gap: 20px;
+    width: 30%;
+    max-width: 250px;
+    height: 100vh;
+    background-color: white;
+}
+.items{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0px 20px;
+    border-radius: 6px;
+    background: #f6f6f6;
+    cursor: pointer;
+    gap: 20px;
+}
