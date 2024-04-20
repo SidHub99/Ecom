@@ -4,9 +4,27 @@ import star_icon from '../assets/star_icon.png'
 import star_dull from '../assets/star_dull_icon.png'
 import { ShopContext } from '../Context/ShopContext'
 import { useContext } from 'react'
+import { useState } from 'react'
 const Productdisplay = (props) => {
     const{product}=props
     const{addtocart}=useContext(ShopContext)
+    const [selectedsize,Setselectedsize]=useState(null)
+
+//     var sizeOptions = document.querySelectorAll('.sizes-opt');
+
+// // Loop through each size option and add click event listener
+// sizeOptions.forEach(function(option) {
+//     option.addEventListener('click', function() {
+//         // Remove the 'clicked' class from all size options
+//         sizeOptions.forEach(function(option) {
+//             option.classList.remove('clicked');
+//         });
+        
+//         // Add the 'clicked' class to the clicked size option
+//         this.classList.add('clicked');
+//     });
+// });
+
   return (
     <div className='productdisplay'>
         <div className="left">
@@ -40,11 +58,11 @@ const Productdisplay = (props) => {
                     Select size
                 </h1>
                 <div className="sizes">
-                    <div>S</div>
-                    <div>M</div>
-                    <div>L</div>
-                    <div>XL</div>
-                    <div>XXL</div>
+                    <div className={`sizes-opt ${selectedsize === 'S' ? 'clicked' : ''}`} onClick={()=>Setselectedsize('S')}  >S</div>
+                    <div className={`sizes-opt ${selectedsize === 'M' ? 'clicked' : ''}`} onClick={()=>Setselectedsize('M')} >M</div>
+                    <div className={`sizes-opt ${selectedsize === 'L' ? 'clicked' : ''}`} onClick={()=>Setselectedsize('L')} >L</div>
+                    <div className={`sizes-opt ${selectedsize === 'XL' ? 'clicked' : ''}`} onClick={()=>Setselectedsize('XL')} >XL</div>
+                    <div className={`sizes-opt ${selectedsize === 'XXL' ? 'clicked' : ''}`} onClick={()=>Setselectedsize('XXL')} >XXL</div>
 
                 </div>
             </div>
