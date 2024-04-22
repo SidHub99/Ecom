@@ -28,20 +28,22 @@ const ShopContextProvider=(props)=>{
 
     const [cartItems,setCartItems]=useState(getdefaultcart())
     
-    const addtocart=(item,size)=>{
-        setCartItems((prev)=>({...prev,[item]:prev[item]+1}))
-        if(localStorage.getItem('auth-token')){
-            fetch('http://localhost:5000/addtocart',{
-                method:'POST',
-                headers:{
-                    'Content-Type':'application/json',
-                    'auth-token':`${localStorage.getItem('auth-token')}`
-                },
-                body:JSON.stringify({id:item,size:size})
-            }).then((res)=>res.json()).then((data)=>console.log(data))
-
-        }
-    }
+    // const addtocart=(item,size)=>{
+    //     setCartItems((prev)=>({...prev,[item]:prev[item]+1}))
+    //     if(localStorage.getItem('auth-token') && !size){
+    //         fetch('http://localhost:5000/addtocart',{
+    //             method:'POST',
+    //             headers:{
+    //                 'Content-Type':'application/json',
+    //                 'auth-token':`${localStorage.getItem('auth-token')}`
+    //             },
+    //             body:JSON.stringify({id:item,size:size})
+    //         }).then((res)=>res.json()).then((data)=>console.log(data))
+    //         console.log('from call')
+            
+    //     }
+        
+    // }
     const removefromcart=(item)=>{
         setCartItems((prev)=>({...prev,[item]:prev[item]-1}))
         if(localStorage.getItem('auth-token')){

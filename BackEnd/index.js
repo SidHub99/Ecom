@@ -11,12 +11,21 @@ app.use(cors())
 mongoose.connect("mongodb+srv://umar:umar123@cluster0.assxzcy.mongodb.net/")
 
 //SCHEMA
+const orderschema= new mongoose.Schema({
+    uid:{type:String,required:true},
+    name:{type:String,required:true},
+    quantity:{type:Number,required:true},
+    image:{type:String,required:true},
+    category:{type:String,required:true},
+    size:{type:String},
+})
 
 const image_schema= new mongoose.Schema({
     id:{type:Number,required:true},
     name:{type:String,required:true},
     image:{type:String,required:true},
     category:{type:String,required:true},
+    size:{type:String},
     new_price:{type:Number,required:true},
     old_price:{type:Number,required:true},
     date:{type: Date,default:Date.now },
@@ -31,6 +40,7 @@ const user_schema=new mongoose.Schema({
     date:{type: Date,default:Date.now },
     cartData:{type: Object}
 })
+const Order=mongoose.model("Order",orderschema)
 const Product= mongoose.model("Product",image_schema)
 const User=mongoose.model("Users",user_schema)
 app.post("/addproduct",async(req,res)=>{
@@ -90,15 +100,87 @@ const fetchuser=async(req,res,next)=>{
         })
     }
 }
+app.post('/addtocart', fetchuser, async (req, res) => {
+    let user = await User.findOne({ _id: req.user.id });
+    user.cartData[req.body.id] += 1;
+    await User.findByIdAndUpdate({ _id: req.user.id }, { cartData: user.cartData });
 
-app.post('/addtocart',fetchuser,async(req,res)=>{
-    console.log("Added",req.body.id)
-    let user=await User.findOne({_id:req.user.id});
-    user.cartData[req.body.id]+=1;
-    await User.findByIdAndUpdate({_id:req.user.id},{cartData:user.cartData})
-    res.send("added")
+    let existingOrder = await Order.findOne({ uid: req.user.id, size: req.body.size });
+    
+    if (existingOrder) {
+        existingOrder.quantity += 1;
+        await existingOrder.save(); // Save the updated order
+        res.send({ message: "Quantity Added", success: true });
+    } else {
+        let userid = req.user.id;
+        let prodid = req.body.id;
+        let product = await Product.findOne({ id: prodid });
+        if (product) {
+            const order = new Order({
+                uid: userid,
+                name: product.name,
+                quantity: 1,
+                image: product.image,
+                category: product.category,
+                size: req.body.size
+            });
+            await order.save();
+            res.send({ message: 'Added', success: true });
+        } else {
+            res.send({ message: 'Product not found', success: false });
+        }
+    }
+});
 
-})
+// app.post('/addtocart',fetchuser,async(req,res)=>{
+//     // console.log("Added",req.body.id)
+//     // let item_id=req.body.id;
+//     // const product= await Product.findOne({id:item_id})
+//     // if(product)
+//     // {
+//     //         product.size=req.body.size;
+//     //         await product.save;
+//     //         console.log(req.body.id,"with size",req.body.size,"saved");
+//     // }
+//     let user=await User.findOne({_id:req.user.id});
+//     user.cartData[req.body.id]+=1;
+//     await User.findByIdAndUpdate({_id:req.user.id},{cartData:user.cartData})
+//     // res.send({message:"added"})
+//     let previous_order=await Order.find({uid:req.user.id});
+    
+//     if (previous_order.length>0)
+//     {
+//         let existingOrder = previous_order.find(order => order.size === req.body.size);
+//         if(existingOrder)
+//         {
+//         existingOrder.quantity+=1;
+//         await Order.findByIdAndUpdate({_id:previous_order.id},{quantity:existingOrder.quantity})
+//         res.send({message:"Quantity Added",success:true})
+//         }
+//     }
+//         else{
+//         let userid=req.user.id;
+//         let prodid= req.body.id;
+//         let product= await Product.findOne({id:prodid})
+//         if (product){
+//             const order= new Order({
+//                 uid:userid,
+//                 name:product.name,
+//                 quantity:1,
+//                 image:product.image,
+//                 category:product.category,
+//                 size:req.body.size
+//             })
+//             await order.save();
+//         }
+//         res.send({
+//             message:'Added',
+//             'success':true
+//         })
+//         }
+    
+
+// })
 
 app.post('/getcartdata',fetchuser,async(req,res)=>{
     let user=await User.findOne({_id:req.user.id});
@@ -111,9 +193,9 @@ app.post('/removefromcart',fetchuser,async(req,res)=>{
     if(user.cartData[req.body.id]>0)
     {    user.cartData[req.body.id]-=1;
     await User.findByIdAndUpdate({_id:req.user.id},{cartData:user.cartData})
-    res.send("Removed")}
+    res.send({message:"Removed"})}
     else{
-        res.send("invalid operation")
+        res.send({message:"invalid operation"})
     }
 
 })

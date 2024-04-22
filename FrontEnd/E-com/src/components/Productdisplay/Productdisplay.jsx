@@ -9,21 +9,14 @@ const Productdisplay = (props) => {
     const{product}=props
     const{addtocart}=useContext(ShopContext)
     const [selectedsize,Setselectedsize]=useState(null)
-
-//     var sizeOptions = document.querySelectorAll('.sizes-opt');
-
-// // Loop through each size option and add click event listener
-// sizeOptions.forEach(function(option) {
-//     option.addEventListener('click', function() {
-//         // Remove the 'clicked' class from all size options
-//         sizeOptions.forEach(function(option) {
-//             option.classList.remove('clicked');
-//         });
+    const handleaddtocart=()=>{
+        if (!selectedsize)
+        {
+            alert("Please select size")
+        }
+        else {addtocart(product.id,selectedsize)}
         
-//         // Add the 'clicked' class to the clicked size option
-//         this.classList.add('clicked');
-//     });
-// });
+    }
 
   return (
     <div className='productdisplay'>
@@ -66,7 +59,7 @@ const Productdisplay = (props) => {
 
                 </div>
             </div>
-            <button onClick={()=>{addtocart(product.id)}}>Add to Cart</button>
+            <button onClick={()=>{handleaddtocart(product.id, selectedsize)}}>Add to Cart</button>
             <p className='category'><span>Category : </span> Women, Tshirt, Top</p>
             <p className='category'><span>Tags : </span> Modern, Latest</p>
         </div>

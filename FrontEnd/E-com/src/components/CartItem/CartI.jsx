@@ -7,7 +7,8 @@ import { ShopContext } from '../Context/ShopContext'
 import remove_icon from '../assets/cart_cross_icon.png'
 const CartI = () => {
   // const[cartitems,Setcartitems]=useState([])
-    const {all_product,gettotal,cartItems,removefromcart}= useContext(ShopContext)
+
+    const {all_product,gettotal,cartItems,gettotalcartitems,removefromcart}= useContext(ShopContext)
     // const addtocart=(item)=>{//here an item id will come
     //   Setcartitems((prev)=>{
     //     return {...prev,[item]:prev[item]+1}//will clone empty array of cart uptill 300 into prev
@@ -33,6 +34,7 @@ const CartI = () => {
                 <div className="cart main">
                   <img src={e.image} alt='' className='product-icon' />
                   <p>{e.name}</p>
+                  
                   <p>${e.new_price}</p>
                   <button className='quantity'>{cartItems[e.id]}</button>
                   <p>${e.new_price*cartItems[e.id]}</p>
@@ -63,7 +65,7 @@ const CartI = () => {
         <hr/>
         <div className="subtotal">
             <h3>Total</h3>
-            <h3>${gettotal()}</h3>
+            <h3>${gettotalcartitems()}</h3>
         </div>
         <button>Proceed to checkout</button>
         </div>
