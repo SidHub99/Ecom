@@ -6,9 +6,11 @@ import '../CartItem/CartItem.css'
 import { ShopContext } from '../Context/ShopContext'
 import remove_icon from '../assets/cart_cross_icon.png'
 const CartI = () => {
-  // const[cartitems,Setcartitems]=useState([])
 
-    const {all_product,gettotal,cartItems,gettotalcartitems,removefromcart}= useContext(ShopContext)
+  // const[cartitems,Setcartitems]=useState([])
+    
+
+    const {orders}= useContext(ShopContext)
     // const addtocart=(item)=>{//here an item id will come
     //   Setcartitems((prev)=>{
     //     return {...prev,[item]:prev[item]+1}//will clone empty array of cart uptill 300 into prev
@@ -27,26 +29,26 @@ const CartI = () => {
       </div>
       <hr/>
       {
-        all_product.map((e)=>{
-            if (cartItems[e.id] > 0 )
+        orders.map((e)=>{
+            if (orders.length > 0 )
             {
                 return <div>
                 <div className="cart main">
                   <img src={e.image} alt='' className='product-icon' />
                   <p>{e.name}</p>
                   
-                  <p>${e.new_price}</p>
-                  <button className='quantity'>{cartItems[e.id]}</button>
-                  <p>${e.new_price*cartItems[e.id]}</p>
-                  <img className='remove' src={remove_icon} onClick={()=>{removefromcart(e.id)}} alt=''/>
-                  
+                  <p>${e.price}</p>
+                  <button className='quantity'>{e.quantity}</button>
+                  <p>${e.price * e.quantity}</p>
+                  {/* <img className='remove' src={remove_icon} onClick={()=>{removefromcart(e.id)}} alt=''/> */}
+                  <img className='remove' src={remove_icon}  alt=''/>
                 </div>
                 <hr/>
                 </div>
 
             }
                 else{
-                    return null;
+                    return <h1>No Orders to Display</h1>
                 }
         })
       }
@@ -55,7 +57,7 @@ const CartI = () => {
             <h1>Cart Total</h1>
             <div className="subtotal">
                 <p>Sub Total</p>
-                <p>${gettotal()}</p>
+                <p>$0</p>
             </div>
         <hr/>
         <div className="subtotal">
@@ -65,7 +67,7 @@ const CartI = () => {
         <hr/>
         <div className="subtotal">
             <h3>Total</h3>
-            <h3>${gettotalcartitems()}</h3>
+            <h3>$0</h3>
         </div>
         <button>Proceed to checkout</button>
         </div>

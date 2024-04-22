@@ -15,6 +15,7 @@ const orderschema= new mongoose.Schema({
     uid:{type:String,required:true},
     name:{type:String,required:true},
     quantity:{type:Number,required:true},
+    price:{type:Number,required:true},
     image:{type:String,required:true},
     category:{type:String,required:true},
     size:{type:String},
@@ -119,6 +120,7 @@ app.post('/addtocart', fetchuser, async (req, res) => {
             const order = new Order({
                 uid: userid,
                 name: product.name,
+                price:product.new_price,
                 quantity: 1,
                 image: product.image,
                 category: product.category,
@@ -186,7 +188,10 @@ app.post('/getcartdata',fetchuser,async(req,res)=>{
     let user=await User.findOne({_id:req.user.id});
     res.json(user.cartData)
 })
-
+app.get('/getorders',async(req,res)=>{
+    let orders=await Order.find({})
+    res.send(orders)
+})
 app.post('/removefromcart',fetchuser,async(req,res)=>{
     console.log("Removed",req.body.id)
     let user=await User.findOne({_id:req.user.id});
