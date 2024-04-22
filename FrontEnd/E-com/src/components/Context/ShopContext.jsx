@@ -26,7 +26,14 @@ const ShopContextProvider=(props)=>{
             //     body:""
             // }).then((res)=>res.json()).then((data)=>setCartItems(data))
             let call=async()=>{
-                await fetch('http://localhost:5000/getorders').then((res)=>res.json()).then((data)=>Setorders(data))
+                await fetch('http://localhost:5000/getorders',{
+                    method:'POST',
+                    headers:{
+                        'auth-token':`${localStorage.getItem('auth-token')}`,
+                        'Content-Type':'application/json'
+                    },
+                    body:""
+                }).then((res)=>res.json()).then((data)=>Setorders(data))
               }
               call();
         }
@@ -66,28 +73,14 @@ const ShopContextProvider=(props)=>{
             })
         }
     }
-    // const gettotal=()=>{
-    //     let total=0
-    //     for (const item in cartItems ){
-    //         if(cartItems[item]>0){
-    //             let iteminfo=all_product.find((product)=>product.id===Number(item))
-    //             total+=cartItems[item]*iteminfo.new_price;
-    //             return total
-    //         }
-            
-            
-    //     }
-    // }
-    // const getgrandtotal=()=>{
-    //    total=0
-    //     for (const item in cartItems)
-    //     {
-    //         if (cartItems[item] > 0)
-    //         {
-                
-    //         }
-    //     }
-    // }
+    const gettotal=()=>{
+        let total=0
+       for (const order in orders)
+       {
+        total += orders[order].price*orders[order].quantity
+       }
+       return total
+    }
 
     const gettotalcartitems=()=>{
         // let total=0
@@ -103,7 +96,7 @@ const ShopContextProvider=(props)=>{
         
     }
 
-    const contextvalue={orders,gettotalcartitems,removefromcart,all_product,addtocart}
+    const contextvalue={orders,gettotal,gettotalcartitems,removefromcart,all_product,addtocart}
     return(
         <ShopContext.Provider value={contextvalue}>
             {props.children}    

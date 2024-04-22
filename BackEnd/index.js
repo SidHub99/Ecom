@@ -13,6 +13,7 @@ mongoose.connect("mongodb+srv://umar:umar123@cluster0.assxzcy.mongodb.net/")
 //SCHEMA
 const orderschema= new mongoose.Schema({
     uid:{type:String,required:true},
+    pid:{type:String,required:true},
     name:{type:String,required:true},
     quantity:{type:Number,required:true},
     price:{type:Number,required:true},
@@ -106,11 +107,11 @@ app.post('/addtocart', fetchuser, async (req, res) => {
     user.cartData[req.body.id] += 1;
     await User.findByIdAndUpdate({ _id: req.user.id }, { cartData: user.cartData });
 
-    let existingOrder = await Order.findOne({ uid: req.user.id, size: req.body.size });
+    let existingOrder = await Order.findOne({ uid: req.user.id, size: req.body.size ,pid:req.body.id});
     
     if (existingOrder) {
         existingOrder.quantity += 1;
-        await existingOrder.save(); // Save the updated order
+        await existingOrder.save({maxTimeMS:30000}); // Save the updated order
         res.send({ message: "Quantity Added", success: true });
     } else {
         let userid = req.user.id;
@@ -119,6 +120,7 @@ app.post('/addtocart', fetchuser, async (req, res) => {
         if (product) {
             const order = new Order({
                 uid: userid,
+                pid:product.id,
                 name: product.name,
                 price:product.new_price,
                 quantity: 1,
@@ -126,7 +128,7 @@ app.post('/addtocart', fetchuser, async (req, res) => {
                 category: product.category,
                 size: req.body.size
             });
-            await order.save();
+            await order.save({maxTimeMS:30000});
             res.send({ message: 'Added', success: true });
         } else {
             res.send({ message: 'Product not found', success: false });
@@ -188,8 +190,8 @@ app.post('/getcartdata',fetchuser,async(req,res)=>{
     let user=await User.findOne({_id:req.user.id});
     res.json(user.cartData)
 })
-app.get('/getorders',async(req,res)=>{
-    let orders=await Order.find({})
+app.get('/getorders',fetchuser,async(req,res)=>{
+    let orders=await Order.find({uid:req.user.id})
     res.send(orders)
 })
 app.post('/removefromcart',fetchuser,async(req,res)=>{
@@ -198,9 +200,10 @@ app.post('/removefromcart',fetchuser,async(req,res)=>{
     if(userorder)
     {if (userorder.quantity > 1){
     userorder.quantity-=1;
-   await userorder.save();
+   await userorder.save({maxTimeMS:30000});
     res.send({
         message:"quantity reduced"
+
     })}
     else{
         await Order.findByIdAndDelete({_id:userorder.id})

@@ -10,7 +10,7 @@ const CartI = () => {
   // const[cartitems,Setcartitems]=useState([])
     
 
-    const {orders,removefromcart}= useContext(ShopContext)
+    const {orders,removefromcart,gettotal}= useContext(ShopContext)
     // const addtocart=(item)=>{//here an item id will come
     //   Setcartitems((prev)=>{
     //     return {...prev,[item]:prev[item]+1}//will clone empty array of cart uptill 300 into prev
@@ -22,6 +22,7 @@ const CartI = () => {
       <div className="main">
         <p>Products</p>
         <p>Title</p>
+        <p>Size</p>
         <p>Price</p>
         <p>Quantity</p>
         <p>Total</p>
@@ -36,7 +37,7 @@ const CartI = () => {
                 <div className="cart main">
                   <img src={e.image} alt='' className='product-icon' />
                   <p>{e.name}</p>
-                  
+                  <p>{e.size}</p>
                   <p>${e.price}</p>
                   <button className='quantity'>{e.quantity}</button>
                   <p>${e.price * e.quantity}</p>
@@ -48,7 +49,7 @@ const CartI = () => {
 
             }
                 else{
-                    return <h1>No Orders to Display</h1>
+                    return null;
                 }
         })
       }
@@ -57,7 +58,7 @@ const CartI = () => {
             <h1>Cart Total</h1>
             <div className="subtotal">
                 <p>Sub Total</p>
-                <p>$0</p>
+                <p>${gettotal()}</p>
             </div>
         <hr/>
         <div className="subtotal">
@@ -67,7 +68,7 @@ const CartI = () => {
         <hr/>
         <div className="subtotal">
             <h3>Total</h3>
-            <h3>$0</h3>
+            <h3>${gettotal()}</h3>
         </div>
         <button>Proceed to checkout</button>
         </div>
