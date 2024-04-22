@@ -193,15 +193,29 @@ app.get('/getorders',async(req,res)=>{
     res.send(orders)
 })
 app.post('/removefromcart',fetchuser,async(req,res)=>{
-    console.log("Removed",req.body.id)
-    let user=await User.findOne({_id:req.user.id});
-    if(user.cartData[req.body.id]>0)
-    {    user.cartData[req.body.id]-=1;
-    await User.findByIdAndUpdate({_id:req.user.id},{cartData:user.cartData})
-    res.send({message:"Removed"})}
+    
+    let userorder=await Order.findOne({uid:req.user.id, size:req.body.size});
+    if(userorder)
+    {if (userorder.quantity > 1){
+    userorder.quantity-=1;
+   await userorder.save();
+    res.send({
+        message:"quantity reduced"
+    })}
     else{
-        res.send({message:"invalid operation"})
-    }
+        await Order.findByIdAndDelete({_id:userorder.id})
+        res.send({
+            message:"Item removed"
+        })
+    }}
+    else{res.send({message:"unnable to remove"})}
+    // if(user.cartData[req.body.id]>0)
+    // {    user.cartData[req.body.id]-=1;
+    // await User.findByIdAndUpdate({_id:req.user.id},{cartData:user.cartData})
+    // res.send({message:"Removed"})}
+    // else{
+    //     res.send({message:"invalid operation"})
+    // }
 
 })
 app.post('/login',async(req,res)=>{

@@ -12,6 +12,7 @@ export const ShopContext=createContext(null);
 const ShopContextProvider=(props)=>{
     const [all_product,Setall_product]=useState([])
     const [orders,Setorders]=useState([])
+    const [cartupdated,setCartupdated]=useState(false)
     useEffect(()=>{
         const call=async()=>await fetch("http://localhost:5000/getproducts").then((response)=>response.json()).then((data)=>Setall_product(data))
         call()
@@ -29,7 +30,7 @@ const ShopContextProvider=(props)=>{
               }
               call();
         }
-    },[])
+    },[cartupdated])
 
     // const [cartItems,setCartItems]=useState(getdefaultcart())
     
@@ -43,24 +44,28 @@ const ShopContextProvider=(props)=>{
                     'auth-token':`${localStorage.getItem('auth-token')}`
                 },
                 body:JSON.stringify({id:item,size:size})
-            }).then((res)=>res.json()).then((data)=>console.log(data))
+            }).then((res)=>res.json()).then((data)=>{console.log(data);
+            setCartupdated(prev=>!prev)
+            })
 
         }
     }
-    // const removefromcart=(item)=>{
-    //     setCartItems((prev)=>({...prev,[item]:prev[item]-1}))
-    //     if(localStorage.getItem('auth-token')){
-    //         fetch('http://localhost:5000/removefromcart',{
-    //             method:'POST',
-    //             headers:{
-    //                 'Content-Type':'application/json',
-    //                 'auth-token':`${localStorage.getItem('auth-token')}`
-    //             },
-    //             body:JSON.stringify({id:item})
-    //         }).then((res)=>res.json()).then((data)=>console.log(data))
-
-    //     }
-    // }
+    const removefromcart=(item,size)=>{
+        
+        if(localStorage.getItem('auth-token')){
+            fetch('http://localhost:5000/removefromcart',{
+                method:'POST',
+                headers:{
+                    'Content-Type':'application/json',
+                    'auth-token':`${localStorage.getItem('auth-token')}`
+                },
+                body:JSON.stringify({id:item,size:size})
+            }).then((res)=>res.json()).then((data)=>{
+                    console.log(data);
+                    setCartupdated(prev=> !prev)
+            })
+        }
+    }
     // const gettotal=()=>{
     //     let total=0
     //     for (const item in cartItems ){
@@ -98,7 +103,7 @@ const ShopContextProvider=(props)=>{
         
     }
 
-    const contextvalue={orders,gettotalcartitems,all_product,addtocart}
+    const contextvalue={orders,gettotalcartitems,removefromcart,all_product,addtocart}
     return(
         <ShopContext.Provider value={contextvalue}>
             {props.children}    

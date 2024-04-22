@@ -10,7 +10,7 @@ const CartI = () => {
   // const[cartitems,Setcartitems]=useState([])
     
 
-    const {orders}= useContext(ShopContext)
+    const {orders,removefromcart}= useContext(ShopContext)
     // const addtocart=(item)=>{//here an item id will come
     //   Setcartitems((prev)=>{
     //     return {...prev,[item]:prev[item]+1}//will clone empty array of cart uptill 300 into prev
@@ -40,8 +40,8 @@ const CartI = () => {
                   <p>${e.price}</p>
                   <button className='quantity'>{e.quantity}</button>
                   <p>${e.price * e.quantity}</p>
-                  {/* <img className='remove' src={remove_icon} onClick={()=>{removefromcart(e.id)}} alt=''/> */}
-                  <img className='remove' src={remove_icon}  alt=''/>
+                  <img className='remove' src={remove_icon} onClick={()=>{removefromcart(e.id,e.size)}} alt=''/>
+                  
                 </div>
                 <hr/>
                 </div>
